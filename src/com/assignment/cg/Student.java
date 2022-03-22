@@ -17,7 +17,7 @@ public class Student {
 	}
 	
 	public boolean isEqual(Object obj) {
-		if(this==obj) {
+		if(this == obj) {
 			return true;
 		}
 		if(obj instanceof Student) {
@@ -25,6 +25,13 @@ public class Student {
 			return ( (stud.studId.equals(this.studId)) && (stud.studName.equals(this.studName)) && (stud.studDept.equals(this.studDept)) && (stud.studMailId.equals(this.studMailId)) && (stud.studMarks==this.studMarks) );
 		}
 		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		int hash = 0;
+		hash = 213*this.studMarks;
+		return hash ;
 	}
 	
 	public static void main(String[] args) {
