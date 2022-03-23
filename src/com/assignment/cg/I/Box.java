@@ -1,4 +1,4 @@
-package com.assignment.cg;
+package com.assignment.cg.I;
 
 public class Box {
 	private float length;

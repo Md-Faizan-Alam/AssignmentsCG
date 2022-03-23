@@ -1,4 +1,4 @@
-package com.assignment.cg;
+package com.assignment.cg.I;
 
 public class Student {
 	private String studId;
