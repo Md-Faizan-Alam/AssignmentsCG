@@ -11,9 +11,11 @@ public class BookTickets {
 		Theatre[] myTheatres = new Theatre[] {new Theatre("INOX 98"),new Theatre("Lake Mall"),new Theatre("Quest Mall"),new Theatre("Priya Cinema")};
 		Map<String,Integer> movies = new LinkedHashMap<>();
 		String[] movieNames = new String[] {"The Batman","Gangubai Kathawadi","Bachchhan Pandey"};
-		movies.put(movieNames[0],250);
-		movies.put(movieNames[1],230);
-		movies.put(movieNames[2],220);
+		int[] moviePrices = new int[] {250,230,220};
+		
+		movies.put(movieNames[0],moviePrices[0]);
+		movies.put(movieNames[1],moviePrices[1]);
+		movies.put(movieNames[2],moviePrices[2]);
 	
 		for(int i=0;i<4;i++) {
 			myTheatres[i].movies = movies;
@@ -136,4 +138,20 @@ public class BookTickets {
 		}
 		return line;
 	}
+	
+	// A method to show the list of movies and scan the user input
+	public static void showMovies() {
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
