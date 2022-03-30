@@ -1,157 +1,107 @@
 package com.assignment.cg.IIQ3;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.ArrayList;
+
+// All additional methods are implemented in an external Class named ToolBox
+// and used through an object 'tool' of that Class
 
 public class BookTickets {
-	static int width = 70;
 	public static void main(String[] args) {
-		// Adding Theatres and Movies
-		Theatre[] myTheatres = new Theatre[] {new Theatre("INOX 98"),new Theatre("Lake Mall"),new Theatre("Quest Mall"),new Theatre("Priya Cinema")};
-		Map<String,Integer> movies = new LinkedHashMap<>();
-		String[] movieNames = new String[] {"The Batman","Gangubai Kathawadi","Bachchhan Pandey"};
-		int[] moviePrices = new int[] {250,230,220};
 		
-		movies.put(movieNames[0],moviePrices[0]);
-		movies.put(movieNames[1],moviePrices[1]);
-		movies.put(movieNames[2],moviePrices[2]);
-	
-		for(int i=0;i<4;i++) {
-			myTheatres[i].movies = movies;
-		}
+		// ToolBox object
+		ToolBox tool = new ToolBox();
 		
-		Ticket myTicket = null;
+		// Instantiating an array of theaters
+		Theater[] allTheaters = new Theater[] {new Theater("INOX",new int[] {0,1,2},10),new Theater("Lake Mall",new int[] {0,1,2,3},6),new Theater("Quest Mall",new int[] {0,2,3},6)};
 		
-		// A border of 60 characters
-		StringBuilder border = BookTickets.charLine('@',width);
+		// Miscellaneous Instantiations
+		String border = tool.charLine('-', tool.width);
+		int input = 0, movieIn = 0, theaterIn = 0, count = 0;
+		
+		// Presenting the user with options
 		System.out.println(border);
-		BookTickets.align("1. List of Movies and their Prices");
-		BookTickets.align("2. Book Tickets from your nearest theatres");
+		tool.alignText("1. List of Movies and their Prices");
+		tool.alignText("2. Book Tickets from your nearest theatres");
 		System.out.println(border);
 		
-		@SuppressWarnings("resource")
-		Scanner sc = new Scanner(System.in);
-		int input = 0;
-		int movieIn = 0;
-		int theatreIn = 0;
+		input = tool.takeInput(2);
 		
-		try {
-			input = sc.nextInt();
-		}catch(Exception e) {
-		}
-		
-		// For List of movies
+		//	First Case
 		if(input==1) {
-			input = 0;
-			BookTickets.align("Movies available are :");
-			int index = 0;
-			for(Map.Entry<String,Integer> entry:movies.entrySet()) {
-				index++;
-				System.out.println("\t\t"+index+". "+entry.getKey()+" : @Rs"+entry.getValue());
-			}
-			movieIn = sc.nextInt();
-			movieIn--;
-			if(movieIn>=0 && movieIn<movies.size()) {
-				BookTickets.align("Select a Theatre");
-				for(int i=0;i<myTheatres.length;i++) {
-					System.out.println("\t\t"+(i+1)+". "+myTheatres[i].name);
-				}
-				theatreIn = sc.nextInt();
-				theatreIn--;
-				if(theatreIn>=0 && theatreIn<=myTheatres.length) {
-					System.out.print("\n\t\tEnter the no. of tickets :  ");
-					input = sc.nextInt();
-					myTicket = new Ticket(myTheatres[theatreIn],movieNames[movieIn],input);
-					System.out.println(border);
-					myTicket.getInfo();
-					System.out.println(border);
-				}
-				else {
-					System.out.println("Please provide a valid input");					
-				}
-			}
-			else {
-				System.out.println("Please provide a valid input");
+			//	Print the list of available movies
+			tool.alignText("Movies available are");
+			for(int i=0;i<Theater.moviesPlaying.length;i++) {
+				System.out.println("\t\t"+(i+1)+". "+Theater.moviesPlaying[i].name+"\t\tRs."+Theater.moviesPlaying[i].price);
 			}
 			
+			//	Take input from the user as to which movie they want to watch
+			movieIn = tool.takeInput(Theater.moviesPlaying.length);
+			movieIn--;
+			
+			//	Print the list of theaters that have that movie as available
+			count = 1;
+			ArrayList<Theater> someTheaters = new ArrayList<>();
+			tool.alignText("Theaters playing "+Theater.moviesPlaying[movieIn].name);
+			for(int i=0;i<allTheaters.length;i++) {
+				if(allTheaters[i].moviesAvailable.contains(Theater.moviesPlaying[movieIn])) {
+					someTheaters.add(allTheaters[i]);
+					System.out.println("\t\t"+count+". "+allTheaters[i].name+"\t\t"+allTheaters[i].seats.length);
+					count++;
+				}
+			}
+			
+			// Take input from the user as to which theater they want to watch the movie in
+			theaterIn = tool.takeInput(someTheaters.size());
+			theaterIn--;
+			
+			//	Ask for the number of seats they want to book
+			//	Reusing the integer 'count' for storing the user input
+			/*	Note : The user should be provided with the number of seats available
+				for each available theater*/
+			System.out.print("\t\tEnter the number of seats : ");
+			count = tool.takeInput(someTheaters.get(theaterIn).seats.length);
+			
+			//	Create the ticket object using the data acquired from the user
+			Ticket myTicket = new Ticket(someTheaters.get(theaterIn), movieIn, count);
+			//	Print the ticket details
+			System.out.println(border);
+			myTicket.getInfo();
+			System.out.println(border);
 		}
 		
-		// For list of Theatres
+		//	Second Case
 		else if(input==2) {
-			input = 0;
-			BookTickets.align("Select a Theatre");
-			for(int i=0;i<myTheatres.length;i++) {
-				System.out.println("\t\t"+(i+1)+". "+myTheatres[i].name);
+			// Print the list of theaters available
+			tool.alignText("Theaters available are");
+			for(int i=0;i<allTheaters.length;i++) {
+				System.out.println("\t\t"+(i+1)+". "+allTheaters[i].name+"\t\t"+allTheaters[i].seats.length);
 			}
-			theatreIn = sc.nextInt();
-			theatreIn--;
-			if(theatreIn>=0 && theatreIn<myTheatres.length) {
-				BookTickets.align("Movies available are :");
-				int index = 0;
-				for(Map.Entry<String,Integer> entry:movies.entrySet()) {
-					index++;
-					System.out.println("\t\t"+index+". "+entry.getKey()+" : @Rs"+entry.getValue());
-				}
-				movieIn = sc.nextInt();
-				movieIn --;
-				if(movieIn>=0 && movieIn<movies.size()) {
-					System.out.print("\n\t\tEnter the no. of tickets :  ");
-					input = sc.nextInt();
-					myTicket = new Ticket(myTheatres[theatreIn],movieNames[movieIn],input);
-					System.out.println(border);
-					myTicket.getInfo();
-					System.out.println(border);
-				}
-				else {
-					System.out.println("Please provide a valid input");					
-				}
+			
+			//	Take input from the user as to which theater they want to watch the movie in
+			theaterIn = tool.takeInput(allTheaters.length);
+			theaterIn--;
+			
+			//	Print the list of movies available in that specific theater
+			tool.alignText("Movies available are");
+			for(int i=0;i<allTheaters[theaterIn].moviesAvailable.size();i++) {
+				System.out.println("\t\t"+(i+1)+". "+allTheaters[theaterIn].moviesAvailable.get(i).name+"\t\tRs."+allTheaters[theaterIn].moviesAvailable.get(i).price);
+				
 			}
-			else {
-				System.out.println("Please provide a valid input");					
-			}
+			//	Take input from the user as to which movie they want to watch
+			movieIn = tool.takeInput(allTheaters[theaterIn].moviesAvailable.size());
+			movieIn--;
+			
+			//	Ask for the number of seats they want to book
+			System.out.print("\t\tEnter the number of seats : ");
+			count = tool.takeInput(allTheaters[theaterIn].seats.length);
+			
+			//	Create the ticket object using the data acquired from the user
+			Ticket myTicket = new Ticket(allTheaters[theaterIn], movieIn, count);
+			//	Print the ticket details
+			System.out.println(border);
+			myTicket.getInfo();
+			System.out.println(border);
 		}
 		
-		
-		else {
-			System.out.println("Please provide a valid input");
-		}
-		
-		
 	}
-	
-	// A method to align every line to the center
-	public static void align(String line) {
-		int before = (width-line.length())/2;
-		StringBuilder newLine = new StringBuilder("");
-		newLine.append(BookTickets.charLine('-',before));
-		newLine.append(line);
-		newLine.append(BookTickets.charLine('-',width-line.length()-before));
-		System.out.println(newLine);
-	}
-	
-	// A method to write a single character multiple times
-	public static StringBuilder charLine(char c,int n) {
-		StringBuilder line = new StringBuilder("");
-		for(int i=0;i<n;i++) {
-			line.append(c);
-		}
-		return line;
-	}
-	
-	// A method to show the list of movies and scan the user input
-	public static void showMovies() {
-		
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 }

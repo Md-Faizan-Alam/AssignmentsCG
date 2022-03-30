@@ -5,13 +5,13 @@ public class Ticket {
 	String movie;
 	String[] seats;
 	String time = "10:00am";
-	int price;
+	int totalPrice;
 	
-	Ticket(Theatre theatre,String movie,int n){
+	Ticket(Theater theatre,int movieIndex,int n){
 		this.theatre = theatre.name;
-		this.movie = movie;
-		int unitPrice = theatre.movies.get(movie);
-		this.price = n*unitPrice;
+		this.movie = theatre.moviesAvailable.get(movieIndex).name;
+		int unitPrice = theatre.moviesAvailable.get(movieIndex).price;
+		this.totalPrice = n*unitPrice;
 		this.seats = new String[n];
 		for(int i=0;i<n;i++) {
 			this.seats[i] = theatre.seats[i];
@@ -29,7 +29,7 @@ public class Ticket {
 		
 		System.out.println("\n\t\tTime : "+this.time);
 		System.out.println("\t\tFor "+this.seats.length+" people");
-		System.out.println("\t\tTotal price : Rs"+this.price);
+		System.out.println("\t\tTotal price : Rs"+this.totalPrice);
 		
 	}
 	
